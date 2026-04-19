@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - AutoDeal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="utils.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Auto<span>Deal</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="comparison.html">Comparison</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="wishlist.html" class="icon-btn"><img src="images/heart_icon.png" alt="wishlist" class="emoji-icon"><span class="badge">3</span></a>
+                <a href="cart.html" class="icon-btn"><img src="images/cart_icon.png" alt="cart" class="emoji-icon"><span class="badge">2</span></a>
+                <a href="login.html" class="btn btn-outline">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Get in <span>Touch</span></h2>
+            
+            <div class="grid-auto-300-gap-2 mb-3">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title"><img src="images/address_icon.png" alt="address" class="emoji-icon"> Visit Us</h3>
+                        <p class="text-light mb-1">123 Car Street<br>Auto City, AC 12345<br>United States</p>
+                        <p class="text-light"><strong>Hours:</strong><br>Monday - Friday: 9:00 AM - 7:00 PM<br>Saturday: 10:00 AM - 6:00 PM<br>Sunday: 12:00 PM - 5:00 PM</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title"><img src="images/phone_icon.png" alt="phone" class="emoji-icon"> Call Us</h3>
+                        <p class="text-light mb-1">Sales: <strong>(555) 123-4567</strong></p>
+                        <p class="text-light mb-1">Service: <strong>(555) 123-4568</strong></p>
+                        <p class="text-light">Support: <strong>(555) 123-4569</strong></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-title"><img src="images/email_icon.png" alt="email" class="emoji-icon"> Email Us</h3>
+                        <p class="text-light mb-1">General: <strong>info@autodeal.com</strong></p>
+                        <p class="text-light mb-1">Sales: <strong>sales@autodeal.com</strong></p>
+                        <p class="text-light">Support: <strong>support@autodeal.com</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-auto-400-gap-3">
+                <div class="form-container m-0">
+                    <h3 class="form-title">Send Us a Message</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a subject</option>
+                                <option value="sales">Sales Inquiry</option>
+                                <option value="service">Service Request</option>
+                                <option value="support">Customer Support</option>
+                                <option value="review">Review Submission</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Enter your message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+                    </form>
+                </div>
+
+                <div>
+                    <div class="bg-white p-2 rounded-12 shadow mb-2">
+                        <h3 class="mb-1 text-dark">Frequently Asked Questions</h3>
+                        <div class="mb-15">
+                            <h4 class="text-primary mb-05">Do you offer financing?</h4>
+                            <p class="text-light">Yes, we offer flexible financing options with competitive rates. Contact our sales team for more information.</p>
+                        </div>
+                        <div class="mb-15">
+                            <h4 class="text-primary mb-05">What warranty do you provide?</h4>
+                            <p class="text-light">All vehicles come with comprehensive warranty coverage. Terms vary by vehicle type and model.</p>
+                        </div>
+                        <div class="mb-15">
+                            <h4 class="text-primary mb-05">Can I schedule a test drive?</h4>
+                            <p class="text-light">Absolutely! Contact us to schedule a test drive at your convenience.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-primary mb-05">Do you accept trade-ins?</h4>
+                            <p class="text-light">Yes, we accept trade-ins. Our team will evaluate your vehicle and provide a fair offer.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-primary text-white p-2 rounded-12 text-center">
+                        <h3 class="mb-1">Need Immediate Assistance?</h3>
+                        <p class="mb-15 opacity-90">Our team is available 24/7 to answer your questions</p>
+                        <a href="tel:+15551234567" class="btn btn-secondary btn-call">Call Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AutoDeal</h3>
+                <p>Your trusted partner in finding the perfect vehicle.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="comparison.html">Compare Cars</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><img src="images/phone_icon.png" alt="phone" class="emoji-icon"> (555) 123-4567</p>
+                <p><img src="images/email_icon.png" alt="email" class="emoji-icon"> info@autodeal.com</p>
+                <p><img src="images/address_icon.png" alt="address" class="emoji-icon"> 123 Car Street, Auto City</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AutoDeal. All rights reserved.</p>
+        </div>
+    </footer>
+     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+     <script src="scripts/app.js"></script>
+</body>
+</html>

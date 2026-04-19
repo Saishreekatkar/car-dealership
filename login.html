@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AutoDeal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="utils.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="logo">Auto<span>Deal</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Products</a></li>
+                <li><a href="comparison.html">Comparison</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="wishlist.html" class="icon-btn"><img src="images/heart_icon.png" alt="wishlist" class="emoji-icon"><span class="badge">3</span></a>
+                <a href="cart.html" class="icon-btn"><img src="images/cart_icon.png" alt="cart" class="emoji-icon"><span class="badge">2</span></a>
+                <a href="login.html" class="btn btn-outline">Login</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <h2 class="form-title">Login to Your Account</h2>
+        <form>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="remember"> Remember me
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Login</button>
+        </form>
+        <div class="form-footer">
+            <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+            <p><a href="#">Forgot your password?</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AutoDeal</h3>
+                <p>Your trusted partner in finding the perfect vehicle.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Customer Service</h3>
+                <ul>
+                    <li><a href="reviews.html">Reviews</a></li>
+                    <li><a href="comparison.html">Compare Cars</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><img src="images/phone_icon.png" alt="phone" class="emoji-icon"> (555) 123-4567</p>
+                <p><img src="images/email_icon.png" alt="email" class="emoji-icon"> info@autodeal.com</p>
+                <p><img src="images/address_icon.png" alt="address" class="emoji-icon"> 123 Car Street, Auto City</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 AutoDeal. All rights reserved.</p>
+        </div>
+    </footer>
+     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+     <script src="scripts/app.js"></script>
+</body>
+</html>

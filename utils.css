@@ -1,0 +1,148 @@
+/* Utility classes used across pages */
+.emoji-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: -3px;
+    margin-right: 6px;
+}
+
+.btn-full { width: 100%; }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.9rem; }
+
+/* Spacing */
+.mt-05 { margin-top: 0.5rem; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mb-05 { margin-bottom: 0.5rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-15 { margin-bottom: 1.5rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+.ml-1 { margin-left: 1rem; }
+.m-0 { margin: 0; }
+
+/* Text */
+.text-center { text-align: center; }
+.text-dark { color: var(--text-dark); }
+.text-light { color: var(--text-light); }
+.text-primary { color: var(--primary-color); }
+.opacity-90 { opacity: 0.9; }
+.fs-2 { font-size: 2rem; }
+.font-sm { font-size: 0.9rem; }
+.lh-18 { line-height: 1.8; }
+
+/* Background helpers */
+.bg-white { background: var(--white); }
+.bg-primary { background: var(--primary-color); }
+.text-white { color: #ffffff; }
+
+/* Radius / shadow / padding */
+.rounded-12 { border-radius: 12px; }
+.shadow { box-shadow: var(--shadow); }
+.p-2 { padding: 2rem; }
+.p-3 { padding: 3rem; }
+
+/* Layout helpers */
+.overflow-auto { overflow: auto; }
+.grid-auto-300-gap-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+.grid-auto-250 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+.grid-auto-400-gap-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+    align-items: start;
+}
+.grid-1fr-400 {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+}
+.max-w-800 { max-width: 800px; margin: 0 auto; }
+.flex-gap-05-wrap {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Small tweak for card image if using <img> */
+.card-image-img {
+    display: block;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Utility classes extracted from styles.css to reduce clutter */
+
+/* Spacing */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mt-3 { margin-top: 3rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mb-3 { margin-bottom: 3rem; }
+.mb-05 { margin-bottom: 0.5rem; }
+.mb-15 { margin-bottom: 1.5rem; }
+.ml-1 { margin-left: 1rem; }
+.mt-15 { margin-top: 1.5rem; }
+.m-0 { margin: 0; }
+
+/* Layout */
+.max-w-800 { max-width: 800px; margin: 0 auto; }
+.grid-1fr-400 { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
+.grid-auto-250 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+.grid-auto-300-gap-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.grid-auto-400-gap-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 3rem; align-items: start; }
+.flex-gap-05-wrap { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.overflow-auto { overflow-x: auto; }
+
+/* Buttons & forms */
+.btn-full { width: 100%; }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.9rem; }
+.btn-call { background: var(--white); color: var(--primary-color); }
+
+/* Typography */
+.fs-2 { font-size: 2rem; }
+.lh-18 { line-height: 1.8; }
+.font-sm { font-size: 0.9rem; }
+.text-light { color: var(--text-light); }
+.text-dark { color: var(--text-dark); }
+.text-primary { color: var(--primary-color); }
+.text-white { color: var(--white); }
+
+/* Helpers */
+.bg-white { background: var(--white); }
+.bg-primary { background: var(--primary-color); }
+.p-1 { padding: 1rem; }
+.p-2 { padding: 2rem; }
+.p-3 { padding: 3rem; }
+.rounded-12 { border-radius: 12px; }
+.shadow { box-shadow: var(--shadow); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.opacity-90 { opacity: 0.9; }
+.max-w-800 { max-width: 800px; margin: 0 auto; }
+
+/* Small utility aliases used in the UI */
+.mb-05 { margin-bottom: 0.5rem; }
+.mb-15 { margin-bottom: 1.5rem; }
+
+/* End utilities */
+
+/* Emoji icons replacing text emojis */
+.emoji-icon {
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: middle;
+    display: inline-block;
+    border-radius: 4px;
+}
