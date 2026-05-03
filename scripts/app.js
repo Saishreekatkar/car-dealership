@@ -438,6 +438,20 @@
         });
     }
 
+    function initContactPage() {
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            const name = $('#name').val().trim();
+            const email = $('#email').val().trim();
+            const subject = $('#subject').val();
+            const message = $('#message').val().trim();
+            if (!name || !email || !subject || !message) return;
+            
+            alert('Thank you, ' + name + '! Your message regarding "' + subject + '" has been sent successfully.');
+            this.reset();
+        });
+    }
+
     // Global init
     $(function () {
         updateBadges();
@@ -450,6 +464,7 @@
         if (path.endsWith('/product.html')) initProductDetailsPage();
         if (path.endsWith('/login.html')) initLoginPage();
         if (path.endsWith('/signup.html')) initSignupPage();
+        if (path.endsWith('/contact.html')) initContactPage();
         // Bind generic add-to-cart/wishlist on any page
         $(document).on('click', '.add-to-cart', function (e) {
             if ($(this).is('a')) e.preventDefault();
