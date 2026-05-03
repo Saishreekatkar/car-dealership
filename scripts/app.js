@@ -4,7 +4,9 @@
         CART: 'autodeal_cart',
         WISHLIST: 'autodeal_wishlist',
         COMPARE: 'autodeal_compare',
-        USER: 'autodeal_user'
+        USER: 'autodeal_user',
+        COUPON: 'autodeal_coupon',
+        RECENT: 'autodeal_recent'
     };
 
     // Catalog (ids should match data-id in HTML where present)
@@ -63,9 +65,37 @@
             subtotal += p.price * i.qty;
             items += i.qty;
         });
-        const tax = Math.round(subtotal * 0.08);
-        const total = subtotal + tax;
-        return { items, subtotal, tax, total };
+
+        const coupon = getCoupon();
+        let discount = 0;
+        if (coupon && COUPONS[coupon]) {
+            if (COUPONS[coupon].type === 'percent') {
+                discount = subtotal * COUPONS[coupon].val;
+            } else if (COUPONS[coupon].type === 'fixed') {
+                discount = Math.min(subtotal, COUPONS[coupon].val);
+            }
+        }
+        
+        const afterDiscount = subtotal - discount;
+        const tax = Math.round(afterDiscount * 0.08);
+        const total = afterDiscount + tax;
+        return { items, subtotal, discount, tax, total, coupon };
+    }
+
+    // Coupons
+    const COUPONS = {
+        'SAVE10': { type: 'percent', val: 0.10 },
+        'MINUS500': { type: 'fixed', val: 500 }
+    };
+    function getCoupon() { return readStore(STORE_KEYS.COUPON, null); }
+    function setCoupon(c) { writeStore(STORE_KEYS.COUPON, c); }
+
+    // Recently Viewed
+    function getRecent() { return readStore(STORE_KEYS.RECENT, []); }
+    function addRecent(id) {
+        let list = getRecent().filter(x => x !== id);
+        list.unshift(id);
+        writeStore(STORE_KEYS.RECENT, list.slice(0, 4));
     }
 
     // Wishlist
@@ -150,6 +180,10 @@
             if ($card.find('.card-actions .add-to-compare').length === 0) {
                 $('<a class="btn btn-outline add-to-compare" href="#" style="font-size:0.85rem;">Compare</a>').attr('data-id', id).appendTo($card.find('.card-actions'));
             }
+            // Quick View
+            if ($card.find('.quick-view-btn').length === 0) {
+                $('<button class="btn btn-outline quick-view-btn" style="width:100%; margin-top:0.5rem;">Quick View</button>').attr('data-id', id).insertBefore($card.find('.card-actions'));
+            }
             // View Details
             if ($card.find('.view-details').length === 0) {
                 $('<a class="btn btn-secondary view-details" href="#">View Details</a>').attr('data-id', id).appendTo($card.find('.card-actions'));
@@ -190,7 +224,11 @@
         function applyFilters() {
             $('.cards-grid .card').each(function () {
                 const $card = $(this);
-                $card.toggle(matchesFilters($card));
+                if (matchesFilters($card)) {
+                    $card.stop(true, true).fadeIn(300);
+                } else {
+                    $card.stop(true, true).fadeOut(300);
+                }
             });
         }
         $('#type,#price,#year,#fuel,#filter-new,#filter-used,#filter-warranty,#filter-financing').on('change click', applyFilters);
@@ -250,11 +288,63 @@
             const t = cartTotals();
             $('#summary-items').text(`Subtotal (${t.items} items)`);
             $('#summary-subtotal').text(`$${t.subtotal.toLocaleString()}`);
+            
+            // Handle discount row
+            if (t.discount > 0) {
+                if ($('#summary-discount-row').length === 0) {
+                    $('<div class="summary-row" id="summary-discount-row"><span>Discount (' + t.coupon + ')</span><span class="text-primary">-$' + t.discount.toLocaleString() + '</span></div>').insertAfter($('#summary-items').parent());
+                } else {
+                    $('#summary-discount-row').html('<span>Discount (' + t.coupon + ')</span><span class="text-primary">-$' + t.discount.toLocaleString() + '</span>');
+                }
+            } else {
+                $('#summary-discount-row').remove();
+            }
+
             $('#summary-tax').text(`$${t.tax.toLocaleString()}`);
             $('#summary-total').text(`$${t.total.toLocaleString()}`);
             updateBadges();
+
+            // Setup coupon UI if not present
+            if ($('#coupon-section').length === 0) {
+                const couponHtml = `
+                    <div id="coupon-section" class="mt-1 mb-1">
+                        <div style="display:flex; gap:0.5rem;">
+                            <input type="text" id="coupon-input" placeholder="Promo code" class="form-control" style="flex:1;">
+                            <button id="apply-coupon-btn" class="btn btn-secondary">Apply</button>
+                        </div>
+                        <p id="coupon-msg" class="text-light mt-05" style="font-size:0.85rem;"></p>
+                    </div>
+                `;
+                $(couponHtml).insertBefore($('.summary-row').first().parent().find('.mt-2').first());
+            }
+
+            // Sync coupon input value if active
+            if (t.coupon) {
+                $('#coupon-input').val(t.coupon).prop('disabled', true);
+                $('#apply-coupon-btn').text('Remove').addClass('remove-mode');
+            } else {
+                $('#coupon-input').val('').prop('disabled', false);
+                $('#apply-coupon-btn').text('Apply').removeClass('remove-mode');
+            }
         }
         refreshSummary();
+
+        // Coupon events
+        $(document).on('click', '#apply-coupon-btn', function() {
+            if ($(this).hasClass('remove-mode')) {
+                setCoupon(null);
+                $('#coupon-msg').text('Coupon removed.').css('color', '');
+            } else {
+                const code = $('#coupon-input').val().trim().toUpperCase();
+                if (COUPONS[code]) {
+                    setCoupon(code);
+                    $('#coupon-msg').text('Coupon applied successfully!').css('color', 'green');
+                } else {
+                    $('#coupon-msg').text('Invalid coupon code.').css('color', 'red');
+                }
+            }
+            refreshSummary();
+        });
 
         $list.on('click', '.remove-btn', function () {
             const id = $(this).closest('.cart-item').attr('data-id');
@@ -404,7 +494,38 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Recently Viewed Section -->
+            <div id="recently-viewed-container" style="margin-top: 4rem;"></div>
         `);
+
+        // Track and Display Recently Viewed
+        addRecent(p.id);
+        const recentIds = getRecent().filter(rid => rid !== p.id); // don't show current item
+        if (recentIds.length > 0) {
+            let recentHtml = '<h3 class="section-title" style="margin-bottom: 2rem; font-size: 1.8rem;">Recently <span>Viewed</span></h3><div class="cards-grid">';
+            recentIds.forEach(rid => {
+                const rp = getProductById(rid);
+                if (rp) {
+                    recentHtml += `
+                        <div class="card" data-id="${rp.id}">
+                            <div class="card-image">
+                                <img src="${rp.image}" alt="${rp.name}" class="card-image-img">
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">${rp.name}</h3>
+                                <p class="card-price">$${rp.price.toLocaleString()}</p>
+                                <div class="card-actions mt-1">
+                                    <a class="btn btn-secondary view-details" href="product.html?id=${rp.id}" style="width:100%; text-align:center;">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            recentHtml += '</div>';
+            $('#recently-viewed-container').html(recentHtml);
+        }
     }
 
     // Auth pages
@@ -452,10 +573,151 @@
         });
     }
 
+    function initCheckoutPage() {
+        const cart = getCart();
+        if (cart.length === 0) {
+            alert('Your cart is empty. Redirecting to products.');
+            window.location.href = 'products.html';
+            return;
+        }
+        
+        // Render summary read-only
+        const $list = $('#checkout-items');
+        $list.empty();
+        cart.forEach(item => {
+            const p = getProductById(item.id);
+            if (!p) return;
+            $list.append(`
+                <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid #eee;">
+                    <span>${item.qty}x ${p.name}</span>
+                    <span>$${(p.price * item.qty).toLocaleString()}</span>
+                </div>
+            `);
+        });
+        
+        const t = cartTotals();
+        let summaryHtml = `
+            <div style="display:flex; justify-content:space-between; margin-top: 1rem;">
+                <strong>Subtotal</strong><span>$${t.subtotal.toLocaleString()}</span>
+            </div>
+        `;
+        if (t.discount > 0) {
+            summaryHtml += `
+            <div style="display:flex; justify-content:space-between; color: var(--primary-color);">
+                <strong>Discount (${t.coupon})</strong><span>-$${t.discount.toLocaleString()}</span>
+            </div>`;
+        }
+        summaryHtml += `
+            <div style="display:flex; justify-content:space-between;">
+                <strong>Tax (8%)</strong><span>$${t.tax.toLocaleString()}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top: 1rem; font-size: 1.25rem; border-top: 2px solid #ccc; padding-top: 0.5rem;">
+                <strong>Total</strong><strong class="text-primary">$${t.total.toLocaleString()}</strong>
+            </div>
+        `;
+        $('#checkout-summary-totals').html(summaryHtml);
+
+        // Handle submission
+        $('#checkout-form').on('submit', function (e) {
+            e.preventDefault();
+            alert('Order placed successfully! Thank you for choosing AutoDeal.');
+            setCart([]);
+            setCoupon(null);
+            window.location.href = 'index.html';
+        });
+    }
+
+    // --- Animations and UI Enhancements ---
+
+    // 1. Add to Cart Animation
+    function animateAddToCart($btn) {
+        const $cartIcon = $('.nav-actions a[href="cart.html"]');
+        if ($cartIcon.length === 0) return;
+
+        // Fly-to-cart animation
+        const srcImg = $btn.closest('.card').find('img.card-image-img').attr('src') || $btn.closest('.grid-auto-400-gap-3').find('img').attr('src');
+        if (srcImg) {
+            const $flyImg = $('<img/>').attr('src', srcImg).css({
+                position: 'absolute',
+                top: $btn.offset().top,
+                left: $btn.offset().left,
+                width: '50px',
+                height: '50px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                zIndex: 9999,
+                opacity: 0.8
+            }).appendTo('body');
+
+            $flyImg.animate({
+                top: $cartIcon.offset().top,
+                left: $cartIcon.offset().left,
+                width: 20,
+                height: 20,
+                opacity: 0
+            }, 600, 'swing', function() {
+                $(this).remove();
+                // Pop the cart icon
+                $cartIcon.css('transform', 'scale(1.2)');
+                setTimeout(() => $cartIcon.css('transform', 'scale(1)'), 200);
+            });
+        }
+    }
+
+    // 2. Quick View Modal
+    function injectQuickViewModal() {
+        if ($('#quick-view-modal').length > 0) return;
+        const modalHtml = `
+            <div id="quick-view-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; justify-content:center; align-items:center;">
+                <div style="background:#fff; width:90%; max-width:600px; border-radius:12px; padding:2rem; position:relative; animation: slideIn 0.3s ease-out;">
+                    <button id="close-quick-view" style="position:absolute; top:1rem; right:1rem; background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+                    <div id="quick-view-content" style="display:flex; gap:1.5rem; align-items:center; flex-wrap:wrap;"></div>
+                </div>
+            </div>
+            <style>
+                @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            </style>
+        `;
+        $('body').append(modalHtml);
+
+        $('#close-quick-view, #quick-view-modal').on('click', function(e) {
+            if (e.target === this) $('#quick-view-modal').fadeOut();
+        });
+    }
+
+    // 3. Back to Top Button
+    function injectBackToTop() {
+        if ($('#back-to-top').length > 0) return;
+        const btnHtml = `
+            <button id="back-to-top" style="display:none; position:fixed; bottom:2rem; right:2rem; width:50px; height:50px; border-radius:50%; background:var(--primary-color); color:#fff; border:none; font-size:1.5rem; cursor:pointer; z-index:9000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transition: transform 0.2s;">
+                &#8679;
+            </button>
+        `;
+        $('body').append(btnHtml);
+
+        $(window).on('scroll', function() {
+            if ($(this).scrollTop() > 300) {
+                $('#back-to-top').fadeIn();
+            } else {
+                $('#back-to-top').fadeOut();
+            }
+        });
+
+        $('#back-to-top').on('click', function() {
+            $('html, body').animate({ scrollTop: 0 }, 500);
+        });
+
+        $('#back-to-top').hover(function(){ $(this).css('transform', 'translateY(-5px)'); }, function(){ $(this).css('transform', 'translateY(0)'); });
+    }
+
     // Global init
     $(function () {
         updateBadges();
         updateUserUI();
+        
+        injectQuickViewModal();
+        injectBackToTop();
+
         const path = location.pathname.toLowerCase();
         if (path.endsWith('/products.html')) initProductsPage();
         if (path.endsWith('/cart.html')) initCartPage();
@@ -465,10 +727,13 @@
         if (path.endsWith('/login.html')) initLoginPage();
         if (path.endsWith('/signup.html')) initSignupPage();
         if (path.endsWith('/contact.html')) initContactPage();
+        if (path.endsWith('/checkout.html')) initCheckoutPage();
+
         // Bind generic add-to-cart/wishlist on any page
         $(document).on('click', '.add-to-cart', function (e) {
             if ($(this).is('a')) e.preventDefault();
             addToCart($(this).attr('data-id'), 1);
+            animateAddToCart($(this));
         });
         $(document).on('click', '.add-to-wishlist', function (e) {
             if ($(this).is('a')) e.preventDefault();
@@ -477,6 +742,29 @@
         $(document).on('click', '.add-to-compare', function (e) {
             if ($(this).is('a')) e.preventDefault();
             addToCompare($(this).attr('data-id'));
+            alert('Added to comparison (max 3).');
+        });
+
+        // Quick View Event
+        $(document).on('click', '.quick-view-btn', function (e) {
+            e.preventDefault();
+            const id = $(this).attr('data-id');
+            const p = getProductById(id);
+            if (!p) return;
+            
+            $('#quick-view-content').html(`
+                <div style="flex:1; min-width:200px;">
+                    <img src="${p.image}" style="width:100%; border-radius:8px; object-fit:cover;">
+                </div>
+                <div style="flex:1; min-width:200px;">
+                    <h2 class="fs-3 text-dark mb-1">${p.name}</h2>
+                    <p class="fs-2 text-primary mb-1">$${p.price.toLocaleString()}</p>
+                    <p class="text-light mb-1">${p.year} | ${p.type.toUpperCase()} | ${p.condition.toUpperCase()}</p>
+                    <button class="btn btn-primary add-to-cart btn-full" data-id="${p.id}">Add to Cart</button>
+                    <a href="product.html?id=${p.id}" class="btn btn-outline btn-full mt-1">Full Details</a>
+                </div>
+            `);
+            $('#quick-view-modal').css('display', 'flex').hide().fadeIn();
         });
     });
 })();
