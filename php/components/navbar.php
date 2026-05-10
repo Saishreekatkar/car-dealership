@@ -54,8 +54,7 @@ if(isset($_SESSION['user_id'])){
             <li><a href="products.php">Products</a></li>
 
             <li><a href="sell-car.php">Sell Car</a></li>
-
-            <li><a href="../comparison.html">Comparison</a></li>
+<li><a href="comparison.php">Comparison</a></li>
 
             <li><a href="../reviews.html">Reviews</a></li>
 
