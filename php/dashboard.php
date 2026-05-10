@@ -173,14 +173,15 @@ $result = mysqli_query($conn, $sql);
 
                             </button>
 
-                            <a href="#"
-                               class="btn btn-outline">
+                            <button
+                                class="btn btn-outline add-wishlist-btn"
+                                data-id="<?php echo $car['id']; ?>">
 
-                               <img src="../images/heart_icon.png"
-                                    alt="wishlist"
-                                    class="emoji-icon">
+                                <img src="../images/heart_icon.png"
+                                     alt="wishlist"
+                                     class="emoji-icon">
 
-                            </a>
+                            </button>
 
                             <a href="#"
                                class="btn btn-secondary">
@@ -440,9 +441,36 @@ document.querySelectorAll(".add-cart-btn").forEach(button => {
                 const badge =
                     document.getElementById("cart-badge");
 
-                badge.innerText =
-                    parseInt(badge.innerText) + 1;
+                if(badge){
 
+                    badge.innerText =
+                        parseInt(badge.innerText) + 1;
+
+                }
+
+            });
+
+    });
+
+});
+
+document.querySelectorAll(".add-wishlist-btn").forEach(button => {
+
+    button.addEventListener("click", function(){
+
+        const carId = this.dataset.id;
+
+        fetch(`add-to-wishlist.php?id=${carId}`)
+            .then(response => response.text())
+            .then(data => {
+
+                this.style.background = "#ff4d4d";
+
+const badge =
+    document.getElementById("wishlist-badge");
+
+badge.innerText =
+    parseInt(badge.innerText) + 1;
             });
 
     });

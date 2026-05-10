@@ -3,10 +3,13 @@
 include 'db.php';
 
 $cart_count = 0;
+$wishlist_count = 0;
 
 if(isset($_SESSION['user_id'])){
 
     $user_id = $_SESSION['user_id'];
+
+    // CART COUNT
 
     $cart_query = "SELECT COUNT(*) as total
                    FROM cart
@@ -17,6 +20,18 @@ if(isset($_SESSION['user_id'])){
     $cart_data = mysqli_fetch_assoc($cart_result);
 
     $cart_count = $cart_data['total'];
+
+    // WISHLIST COUNT
+
+    $wishlist_query = "SELECT COUNT(*) as total
+                       FROM wishlist
+                       WHERE user_id='$user_id'";
+
+    $wishlist_result = mysqli_query($conn, $wishlist_query);
+
+    $wishlist_data = mysqli_fetch_assoc($wishlist_result);
+
+    $wishlist_count = $wishlist_data['total'];
 
 }
 
@@ -52,21 +67,30 @@ if(isset($_SESSION['user_id'])){
 
         <div class="nav-actions">
 
+            <!-- WISHLIST -->
+
             <a href="wishlist.php"
-               class="icon-btn">
+               class="icon-btn"
+               style="position:relative;">
 
                 <img src="../images/heart_icon.png"
                      alt="wishlist"
                      class="emoji-icon">
 
-                <span class="badge">
-                    0
+                <span class="badge"
+                      id="wishlist-badge">
+
+                    <?php echo $wishlist_count; ?>
+
                 </span>
 
             </a>
 
+            <!-- CART -->
+
             <a href="cart.php"
-               class="icon-btn">
+               class="icon-btn"
+               style="position:relative;">
 
                 <img src="../images/cart_icon.png"
                      alt="cart"

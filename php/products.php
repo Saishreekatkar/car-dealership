@@ -82,38 +82,28 @@ $result = mysqli_query($conn, $sql);
                         <ul class="card-details">
 
                             <li>
-
                                 Brand:
                                 <?php echo $car['brand']; ?>
-
                             </li>
 
                             <li>
-
                                 Model:
                                 <?php echo $car['model']; ?>
-
                             </li>
 
                             <li>
-
                                 Year:
                                 <?php echo $car['year']; ?>
-
                             </li>
 
                             <li>
-
                                 KM Driven:
                                 <?php echo $car['kilometers_driven']; ?>
-
                             </li>
 
                             <li>
-
                                 Fuel Type:
                                 <?php echo $car['fuel_type']; ?>
-
                             </li>
 
                         </ul>
@@ -128,14 +118,15 @@ $result = mysqli_query($conn, $sql);
 
                             </button>
 
-                            <a href="#"
-                               class="btn btn-outline">
+                            <button
+                                class="btn btn-outline add-wishlist-btn"
+                                data-id="<?php echo $car['id']; ?>">
 
-                               <img src="../images/heart_icon.png"
-                                    alt="wishlist"
-                                    class="emoji-icon">
+                                <img src="../images/heart_icon.png"
+                                     alt="wishlist"
+                                     class="emoji-icon">
 
-                            </a>
+                            </button>
 
                             <a href="#"
                                class="btn btn-secondary">
@@ -248,71 +239,27 @@ $result = mysqli_query($conn, $sql);
 
 <script>
 
-document.querySelectorAll(".add-cart-btn").forEach(button => {
+document.querySelectorAll(".add-wishlist-btn").forEach(button => {
 
     button.addEventListener("click", function(){
 
         const carId = this.dataset.id;
 
-        const cartIcon =
-            document.querySelector('a[href="cart.php"] img');
-
-        const circle = document.createElement("div");
-
-        circle.style.position = "fixed";
-        circle.style.width = "20px";
-        circle.style.height = "20px";
-        circle.style.borderRadius = "50%";
-        circle.style.background = "#ff4d4d";
-        circle.style.zIndex = "9999";
-
-        const rect = this.getBoundingClientRect();
-
-        circle.style.left = rect.left + "px";
-        circle.style.top = rect.top + "px";
-
-        document.body.appendChild(circle);
-
-        const cartRect = cartIcon.getBoundingClientRect();
-
-        circle.animate([
-
-            {
-                transform: "translate(0,0) scale(1)",
-                opacity: 1
-            },
-
-            {
-                transform: `translate(
-                    ${cartRect.left - rect.left}px,
-                    ${cartRect.top - rect.top}px
-                ) scale(0.2)`,
-
-                opacity: 0.2
-            }
-
-        ], {
-
-            duration: 800,
-            easing: "ease-in-out"
-
-        });
-
-        setTimeout(() => {
-
-            circle.remove();
-
-        }, 800);
-
-        fetch(`add-to-cart.php?id=${carId}`)
+        fetch(`add-to-wishlist.php?id=${carId}`)
             .then(response => response.text())
             .then(data => {
 
-                const badge =
-                    document.getElementById("cart-badge");
+                if(data.includes("success")){
 
-                badge.innerText =
-                    parseInt(badge.innerText) + 1;
+                    this.style.background = "#ff4d4d";
+
+                    const badge =
+                        document.getElementById("wishlist-badge");
+
+                    badge.innerText =
+                        parseInt(badge.innerText) + 1;
+
+                }
 
             });
 
