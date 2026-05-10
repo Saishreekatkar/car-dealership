@@ -29,6 +29,47 @@ $result = mysqli_query($conn, $sql);
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../utils.css">
 
+    <style>
+
+        .card-details{
+
+            margin-top:15px;
+            margin-bottom:20px;
+
+        }
+
+        .card-details p{
+
+            color:#666;
+            margin-bottom:8px;
+            font-size:14px;
+
+        }
+
+        .card-actions{
+
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin-top:20px;
+
+        }
+
+        .wishlist-btn{
+
+            width:45px;
+            height:45px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            font-size:18px;
+
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -60,7 +101,7 @@ $result = mysqli_query($conn, $sql);
 
                         style="
                             width:100%;
-                            height:200px;
+                            height:220px;
                             object-fit:cover;
                         "
                     >
@@ -79,39 +120,41 @@ $result = mysqli_query($conn, $sql);
 
                         </div>
 
-                        <ul class="card-details">
+                        <div class="card-details">
 
-                            <li>
-                                Brand:
-                                <?php echo $car['brand']; ?>
-                            </li>
+                            <p>
 
-                            <li>
-                                Model:
-                                <?php echo $car['model']; ?>
-                            </li>
+                                <strong>
+                                    <?php echo $car['year']; ?>
+                                </strong>
 
-                            <li>
-                                Year:
-                                <?php echo $car['year']; ?>
-                            </li>
+                                •
 
-                            <li>
-                                KM Driven:
-                                <?php echo $car['kilometers_driven']; ?>
-                            </li>
-
-                            <li>
-                                Fuel Type:
                                 <?php echo $car['fuel_type']; ?>
-                            </li>
 
-                        </ul>
+                            </p>
+
+                            <p>
+
+                                <?php echo number_format($car['kilometers_driven']); ?>
+
+                                KM Driven
+
+                            </p>
+
+                        </div>
 
                         <div class="card-actions">
 
+                            <a href="car-details.php?id=<?php echo $car['id']; ?>"
+                               class="btn btn-primary">
+
+                               View Details
+
+                            </a>
+
                             <button
-                                class="btn btn-primary add-cart-btn"
+                                class="btn btn-outline add-cart-btn"
                                 data-id="<?php echo $car['id']; ?>">
 
                                 Add to Cart
@@ -119,21 +162,12 @@ $result = mysqli_query($conn, $sql);
                             </button>
 
                             <button
-                                class="btn btn-outline add-wishlist-btn"
+                                class="btn btn-outline add-wishlist-btn wishlist-btn"
                                 data-id="<?php echo $car['id']; ?>">
 
-                                <img src="../images/heart_icon.png"
-                                     alt="wishlist"
-                                     class="emoji-icon">
+                                ❤️
 
                             </button>
-
-                            <a href="#"
-                               class="btn btn-secondary">
-
-                               View Details
-
-                            </a>
 
                         </div>
 
@@ -252,9 +286,86 @@ document.querySelectorAll(".add-wishlist-btn").forEach(button => {
                 if(data.includes("success")){
 
                     this.style.background = "#ff4d4d";
+                    this.style.color = "white";
 
                     const badge =
                         document.getElementById("wishlist-badge");
+
+                    badge.innerText =
+                        parseInt(badge.innerText) + 1;
+
+                }
+
+            });
+
+    });
+
+});
+
+document.querySelectorAll(".add-cart-btn").forEach(button => {
+
+    button.addEventListener("click", function(){
+
+        const carId = this.dataset.id;
+
+        const cartIcon =
+            document.querySelector('a[href="cart.php"] img');
+
+        const circle = document.createElement("div");
+
+        circle.style.position = "fixed";
+        circle.style.width = "20px";
+        circle.style.height = "20px";
+        circle.style.borderRadius = "50%";
+        circle.style.background = "#ff4d4d";
+        circle.style.zIndex = "9999";
+
+        const rect = this.getBoundingClientRect();
+
+        circle.style.left = rect.left + "px";
+        circle.style.top = rect.top + "px";
+
+        document.body.appendChild(circle);
+
+        const cartRect = cartIcon.getBoundingClientRect();
+
+        circle.animate([
+
+            {
+                transform: "translate(0,0) scale(1)",
+                opacity: 1
+            },
+
+            {
+                transform: `translate(
+                    ${cartRect.left - rect.left}px,
+                    ${cartRect.top - rect.top}px
+                ) scale(0.2)`,
+
+                opacity: 0.2
+            }
+
+        ], {
+
+            duration: 800,
+            easing: "ease-in-out"
+
+        });
+
+        setTimeout(() => {
+
+            circle.remove();
+
+        }, 800);
+
+        fetch(`add-to-cart.php?id=${carId}`)
+            .then(response => response.text())
+            .then(data => {
+
+                if(data.includes("success")){
+
+                    const badge =
+                        document.getElementById("cart-badge");
 
                     badge.innerText =
                         parseInt(badge.innerText) + 1;

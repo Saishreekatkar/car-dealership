@@ -9,7 +9,7 @@ if(!isset($_SESSION['user_id'])){
     exit();
 }
 
-$sql = "SELECT * FROM cars ORDER BY id DESC LIMIT 6";
+$sql = "SELECT * FROM cars ORDER BY id DESC";
 
 $result = mysqli_query($conn, $sql);
 
@@ -24,10 +24,38 @@ $result = mysqli_query($conn, $sql);
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>AutoDeal - Premium Car Dealership</title>
+    <title>Products - AutoDeal</title>
 
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../utils.css">
+
+    <style>
+
+        .card-details{
+
+            margin-top:12px;
+            margin-bottom:18px;
+
+        }
+
+        .card-details p{
+
+            color:#666;
+            font-size:14px;
+            margin-bottom:6px;
+
+        }
+
+        .card-actions{
+
+            display:flex;
+            gap:10px;
+            align-items:center;
+            flex-wrap:wrap;
+
+        }
+
+    </style>
 
 </head>
 
@@ -35,50 +63,13 @@ $result = mysqli_query($conn, $sql);
 
 <?php include 'components/navbar.php'; ?>
 
-<section class="hero">
-
-    <h1>
-        Find Your Dream Car Today
-    </h1>
-
-    <p>
-        Discover premium vehicles at unbeatable prices
-    </p>
-
-    <div class="hero-buttons">
-
-        <a href="products.php"
-           class="btn btn-primary">
-
-           Browse Cars
-
-        </a>
-
-        <a href="sell-car.php"
-           class="btn btn-secondary">
-
-           Sell Your Vehicle
-
-        </a>
-
-        <a href="../contact.html"
-           class="btn btn-secondary">
-
-           Contact Us
-
-        </a>
-
-    </div>
-
-</section>
-
 <section class="section">
 
     <div class="container">
 
         <h2 class="section-title">
 
-            Latest <span>Vehicles</span>
+            Available <span>Vehicles</span>
 
         </h2>
 
@@ -93,11 +84,11 @@ $result = mysqli_query($conn, $sql);
 
                         src="../uploads/<?php echo $car['image']; ?>"
 
-                        alt="Vehicle"
+                        alt="car"
 
                         style="
                             width:100%;
-                            height:200px;
+                            height:220px;
                             object-fit:cover;
                             display:block;
                         "
@@ -117,51 +108,27 @@ $result = mysqli_query($conn, $sql);
 
                         </div>
 
-                        <ul class="card-details">
+                        <div class="card-details">
 
-                            <li>
-
-                                <img src="../images/engine_icon.png"
-                                     alt="brand"
-                                     class="emoji-icon">
-
-                                <?php echo $car['brand']; ?>
-
-                            </li>
-
-                            <li>
-
-                                <img src="../images/fuel_icon.png"
-                                     alt="fuel"
-                                     class="emoji-icon">
-
-                                <?php echo $car['fuel_type']; ?>
-
-                            </li>
-
-                            <li>
-
-                                <img src="../images/shield_icon.png"
-                                     alt="year"
-                                     class="emoji-icon">
+                            <p>
 
                                 <?php echo $car['year']; ?>
 
-                            </li>
+                                •
 
-                            <li>
+                                <?php echo $car['fuel_type']; ?>
 
-                                <img src="../images/target_icon.png"
-                                     alt="km"
-                                     class="emoji-icon">
+                            </p>
 
-                                <?php echo $car['kilometers_driven']; ?>
+                            <p>
+
+                                <?php echo number_format($car['kilometers_driven']); ?>
 
                                 KM Driven
 
-                            </li>
+                            </p>
 
-                        </ul>
+                        </div>
 
                         <div class="card-actions">
 
@@ -183,7 +150,7 @@ $result = mysqli_query($conn, $sql);
 
                             </button>
 
-                            <a href="#"
+                            <a href="car-details.php?id=<?php echo $car['id']; ?>"
                                class="btn btn-secondary">
 
                                View Details
@@ -197,90 +164,6 @@ $result = mysqli_query($conn, $sql);
                 </div>
 
             <?php endwhile; ?>
-
-        </div>
-
-    </div>
-
-</section>
-
-<section class="section bg-white">
-
-    <div class="container">
-
-        <h2 class="section-title">
-
-            Why Choose <span>AutoDeal</span>
-
-        </h2>
-
-        <div class="cards-grid">
-
-            <div class="card">
-
-                <div class="card-content">
-
-                    <h3 class="card-title">
-
-                        <img src="../images/trophy_icon.png"
-                             alt="best prices"
-                             class="emoji-icon">
-
-                        Best Prices
-
-                    </h3>
-
-                    <p>
-                        We offer competitive pricing on all vehicles.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-content">
-
-                    <h3 class="card-title">
-
-                        <img src="../images/shield_icon.png"
-                             alt="warranty"
-                             class="emoji-icon">
-
-                        Warranty Included
-
-                    </h3>
-
-                    <p>
-                        Every vehicle comes with warranty support.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <div class="card-content">
-
-                    <h3 class="card-title">
-
-                        <img src="../images/rocket_icon.png"
-                             alt="delivery"
-                             class="emoji-icon">
-
-                        Fast Delivery
-
-                    </h3>
-
-                    <p>
-                        Get your vehicle delivered quickly and safely.
-                    </p>
-
-                </div>
-
-            </div>
 
         </div>
 
@@ -438,13 +321,17 @@ document.querySelectorAll(".add-cart-btn").forEach(button => {
             .then(response => response.text())
             .then(data => {
 
-                const badge =
-                    document.getElementById("cart-badge");
+                if(data.includes("success")){
 
-                if(badge){
+                    const badge =
+                        document.getElementById("cart-badge");
 
-                    badge.innerText =
-                        parseInt(badge.innerText) + 1;
+                    if(badge){
+
+                        badge.innerText =
+                            parseInt(badge.innerText) + 1;
+
+                    }
 
                 }
 
@@ -464,13 +351,22 @@ document.querySelectorAll(".add-wishlist-btn").forEach(button => {
             .then(response => response.text())
             .then(data => {
 
-                this.style.background = "#ff4d4d";
+                if(data.includes("success")){
 
-const badge =
-    document.getElementById("wishlist-badge");
+                    this.style.background = "#ff4d4d";
 
-badge.innerText =
-    parseInt(badge.innerText) + 1;
+                    const badge =
+                        document.getElementById("wishlist-badge");
+
+                    if(badge){
+
+                        badge.innerText =
+                            parseInt(badge.innerText) + 1;
+
+                    }
+
+                }
+
             });
 
     });
