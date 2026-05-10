@@ -188,12 +188,12 @@ $item_count = 0;
 
                 <div class="mt-2">
 
-                    <a href="../checkout.html"
-                       class="btn btn-primary btn-full">
+                   <a href="checkout.php"
+   class="btn btn-primary btn-full">
 
-                       Proceed To Checkout
+   Proceed To Checkout
 
-                    </a>
+</a>
 
                 </div>
 

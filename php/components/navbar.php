@@ -41,7 +41,8 @@ if(isset($_SESSION['user_id'])){
 
     <nav>
 
-        <a href="dashboard.php" class="logo">
+        <a href="dashboard.php"
+           class="logo">
 
             Auto<span>Deal</span>
 
@@ -49,18 +50,47 @@ if(isset($_SESSION['user_id'])){
 
         <ul class="nav-links">
 
-            <li><a href="dashboard.php">Home</a></li>
+            <li>
+                <a href="dashboard.php">
+                    Home
+                </a>
+            </li>
 
-            <li><a href="products.php">Products</a></li>
+            <li>
+                <a href="products.php">
+                    Products
+                </a>
+            </li>
 
-            <li><a href="sell-car.php">Sell Car</a></li>
-<li><a href="comparison.php">Comparison</a></li>
+            <li>
+                <a href="sell-car.php">
+                    Sell Car
+                </a>
+            </li>
 
-            <li><a href="../reviews.html">Reviews</a></li>
+            <li>
+                <a href="comparison.php">
+                    Comparison
+                </a>
+            </li>
 
-            <li><a href="../about.html">About</a></li>
+            <li>
+                <a href="reviews.php">
+                    Reviews
+                </a>
+            </li>
 
-            <li><a href="../contact.html">Contact</a></li>
+            <li>
+                <a href="about.php">
+                    About
+                </a>
+            </li>
+
+            <li>
+                <a href="contact.php">
+                    Contact
+                </a>
+            </li>
 
         </ul>
 
