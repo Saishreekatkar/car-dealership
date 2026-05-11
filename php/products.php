@@ -302,77 +302,130 @@ document.querySelectorAll(".add-wishlist-btn").forEach(button => {
 
 });
 
+
+
 document.querySelectorAll(".add-cart-btn").forEach(button => {
 
     button.addEventListener("click", function(){
 
         const carId = this.dataset.id;
 
-        const cartIcon =
-            document.querySelector('a[href="cart.php"] img');
-
-        const circle = document.createElement("div");
-
-        circle.style.position = "fixed";
-        circle.style.width = "20px";
-        circle.style.height = "20px";
-        circle.style.borderRadius = "50%";
-        circle.style.background = "#ff4d4d";
-        circle.style.zIndex = "9999";
-
-        const rect = this.getBoundingClientRect();
-
-        circle.style.left = rect.left + "px";
-        circle.style.top = rect.top + "px";
-
-        document.body.appendChild(circle);
-
-        const cartRect = cartIcon.getBoundingClientRect();
-
-        circle.animate([
-
-            {
-                transform: "translate(0,0) scale(1)",
-                opacity: 1
-            },
-
-            {
-                transform: `translate(
-                    ${cartRect.left - rect.left}px,
-                    ${cartRect.top - rect.top}px
-                ) scale(0.2)`,
-
-                opacity: 0.2
-            }
-
-        ], {
-
-            duration: 800,
-            easing: "ease-in-out"
-
-        });
-
-        setTimeout(() => {
-
-            circle.remove();
-
-        }, 800);
+        const currentButton = this;
 
         fetch(`add-to-cart.php?id=${carId}`)
-            .then(response => response.text())
-            .then(data => {
 
-                if(data.includes("success")){
+        .then(response => response.text())
 
-                    const badge =
-                        document.getElementById("cart-badge");
+        .then(data => {
 
-                    badge.innerText =
-                        parseInt(badge.innerText) + 1;
+            // SUCCESS
 
-                }
+            if(data.includes("success")){
 
-            });
+                // UPDATE BADGE
+
+                const badge =
+                    document.getElementById("cart-badge");
+
+                badge.innerText =
+                    parseInt(badge.innerText) + 1;
+
+                // BUTTON CHANGE
+
+                currentButton.innerText =
+                    "Added ✓";
+
+                currentButton.disabled = true;
+
+                currentButton.style.background =
+                    "#28a745";
+
+                // FLOATING ANIMATION
+
+                const cartIcon =
+                    document.querySelector('a[href="cart.php"] img');
+
+                const circle =
+                    document.createElement("div");
+
+                circle.style.position = "fixed";
+                circle.style.width = "20px";
+                circle.style.height = "20px";
+                circle.style.borderRadius = "50%";
+                circle.style.background = "#ff4d4d";
+                circle.style.zIndex = "9999";
+
+                const rect =
+                    currentButton.getBoundingClientRect();
+
+                circle.style.left = rect.left + "px";
+                circle.style.top = rect.top + "px";
+
+                document.body.appendChild(circle);
+
+                const cartRect =
+                    cartIcon.getBoundingClientRect();
+
+                circle.animate([
+
+                    {
+                        transform: "translate(0,0) scale(1)",
+                        opacity: 1
+                    },
+
+                    {
+                        transform: `translate(
+                            ${cartRect.left - rect.left}px,
+                            ${cartRect.top - rect.top}px
+                        ) scale(0.2)`,
+
+                        opacity: 0.2
+                    }
+
+                ], {
+
+                    duration: 800,
+                    easing: "ease-in-out"
+
+                });
+
+                setTimeout(() => {
+
+                    circle.remove();
+
+                }, 800);
+
+            }
+
+            // DUPLICATE
+
+            else if(data.includes("exists")){
+
+                currentButton.innerText =
+                    "Already Added";
+
+                currentButton.style.background =
+                    "#6c757d";
+
+            }
+
+            // LOGIN
+
+            else if(data.includes("login")){
+
+                alert("Please login first");
+
+            }
+
+            // ERROR
+
+            else{
+
+                alert("Something went wrong");
+
+            }
+
+        });
 
     });
 

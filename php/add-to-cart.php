@@ -5,14 +5,18 @@ session_start();
 include 'db.php';
 
 if(!isset($_SESSION['user_id'])){
+
+    echo "login";
+
     exit();
+
 }
 
 $user_id = $_SESSION['user_id'];
 
 $car_id = $_GET['id'];
 
-// CHECK IF ALREADY EXISTS
+// CHECK DUPLICATE
 
 $check = "SELECT *
           FROM cart
@@ -23,12 +27,13 @@ $check_result = mysqli_query($conn, $check);
 
 if(mysqli_num_rows($check_result) > 0){
 
-    echo "already added";
+    echo "exists";
+
     exit();
 
 }
 
-// INSERT INTO CART
+// INSERT
 
 $sql = "INSERT INTO cart(user_id, car_id)
         VALUES('$user_id', '$car_id')";
