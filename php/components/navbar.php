@@ -146,12 +146,20 @@ if(isset($_SESSION['user_id'])){
 
             </a>
 
-            <span class="welcome-text">
+            <!-- PROFILE BUTTON -->
 
-                Welcome,
-                <?php echo $user_name; ?>
+            <a href="profile.php"
+               class="btn btn-primary"
+               style="
+                    margin-right:10px;
+                    text-decoration:none;
+               ">
 
-            </span>
+                👤 <?php echo $user_name; ?>
+
+            </a>
+
+            <!-- LOGIN / LOGOUT -->
 
             <?php if(isset($_SESSION['user_id'])): ?>
 

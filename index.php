@@ -1,6 +1,6 @@
 <?php
 
-header("Location: php/signup.php");
+header("Location: php/login.php");
 exit();
 
 ?>

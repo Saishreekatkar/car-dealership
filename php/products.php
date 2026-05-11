@@ -9,7 +9,12 @@ if(!isset($_SESSION['user_id'])){
     exit();
 }
 
-$sql = "SELECT * FROM cars ORDER BY id DESC";
+$user_id = $_SESSION['user_id'];
+
+$sql = "SELECT *
+        FROM cars
+        WHERE seller_id != '$user_id'
+        ORDER BY id DESC";
 
 $result = mysqli_query($conn, $sql);
 
