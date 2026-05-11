@@ -5,9 +5,21 @@ include 'db.php';
 $cart_count = 0;
 $wishlist_count = 0;
 
+// DEFAULT USER NAME
+
+$user_name = "Guest";
+
 if(isset($_SESSION['user_id'])){
 
     $user_id = $_SESSION['user_id'];
+
+    // GET USER NAME SAFELY
+
+    if(isset($_SESSION['user_name'])){
+
+        $user_name = $_SESSION['user_name'];
+
+    }
 
     // CART COUNT
 
@@ -137,16 +149,29 @@ if(isset($_SESSION['user_id'])){
             <span class="welcome-text">
 
                 Welcome,
-                <?php echo $_SESSION['user_name']; ?>
+                <?php echo $user_name; ?>
 
             </span>
 
-            <a href="logout.php"
-               class="btn btn-outline">
+            <?php if(isset($_SESSION['user_id'])): ?>
 
-               Logout
+                <a href="logout.php"
+                   class="btn btn-outline">
 
-            </a>
+                   Logout
+
+                </a>
+
+            <?php else: ?>
+
+                <a href="login.php"
+                   class="btn btn-outline">
+
+                   Login
+
+                </a>
+
+            <?php endif; ?>
 
         </div>
 
