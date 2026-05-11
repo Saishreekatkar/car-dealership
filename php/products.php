@@ -31,6 +31,29 @@ $result = mysqli_query($conn, $sql);
 
     <style>
 
+        .search-box{
+
+            margin-bottom:30px;
+
+        }
+
+        .search-box input{
+
+            width:100%;
+            padding:15px;
+            border:1px solid #ccc;
+            border-radius:10px;
+            font-size:16px;
+            outline:none;
+
+        }
+
+        .search-box input:focus{
+
+            border-color:#ff4d4d;
+
+        }
+
         .card-details{
 
             margin-top:15px;
@@ -52,6 +75,7 @@ $result = mysqli_query($conn, $sql);
             gap:10px;
             align-items:center;
             margin-top:20px;
+            flex-wrap:wrap;
 
         }
 
@@ -86,7 +110,22 @@ $result = mysqli_query($conn, $sql);
 
         </h2>
 
-        <div class="cards-grid">
+        <!-- LIVE SEARCH -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Search by car name, brand or model..."
+            >
+
+        </div>
+
+        <!-- CAR LIST -->
+
+        <div class="cards-grid"
+             id="cars-container">
 
             <?php while($car = mysqli_fetch_assoc($result)): ?>
 
@@ -207,9 +246,9 @@ $result = mysqli_query($conn, $sql);
 
                 <li><a href="products.php">Products</a></li>
 
-                <li><a href="../about.html">About Us</a></li>
+                <li><a href="comparison.php">Comparison</a></li>
 
-                <li><a href="../contact.html">Contact</a></li>
+                <li><a href="wishlist.php">Wishlist</a></li>
 
             </ul>
 
@@ -221,9 +260,9 @@ $result = mysqli_query($conn, $sql);
 
             <ul>
 
-                <li><a href="../reviews.html">Reviews</a></li>
+                <li><a href="reviews.php">Reviews</a></li>
 
-                <li><a href="../comparison.html">Compare Cars</a></li>
+                <li><a href="contact.php">Contact</a></li>
 
                 <li><a href="#">FAQ</a></li>
 
@@ -273,30 +312,21 @@ $result = mysqli_query($conn, $sql);
 
 <script>
 
-document.querySelectorAll(".add-wishlist-btn").forEach(button => {
+// LIVE SEARCH AJAX
 
-    button.addEventListener("click", function(){
+document.getElementById("search-input")
+.addEventListener("keyup", function(){
 
-        const carId = this.dataset.id;
+    const searchValue = this.value;
 
-        fetch(`add-to-wishlist.php?id=${carId}`)
-            .then(response => response.text())
-            .then(data => {
+    fetch(`search-cars.php?search=${searchValue}`)
 
-                if(data.includes("success")){
+    .then(response => response.text())
 
-                    this.style.background = "#ff4d4d";
-                    this.style.color = "white";
+    .then(data => {
 
-                    const badge =
-                        document.getElementById("wishlist-badge");
-
-                    badge.innerText =
-                        parseInt(badge.innerText) + 1;
-
-                }
-
-            });
+        document.getElementById("cars-container")
+        .innerHTML = data;
 
     });
 
@@ -304,13 +334,71 @@ document.querySelectorAll(".add-wishlist-btn").forEach(button => {
 
 
 
-document.querySelectorAll(".add-cart-btn").forEach(button => {
+// WISHLIST AJAX
 
-    button.addEventListener("click", function(){
+document.addEventListener("click", function(e){
 
-        const carId = this.dataset.id;
+    if(e.target.closest(".add-wishlist-btn")){
 
-        const currentButton = this;
+        const button =
+            e.target.closest(".add-wishlist-btn");
+
+        const carId =
+            button.dataset.id;
+
+        fetch(`add-to-wishlist.php?id=${carId}`)
+
+        .then(response => response.text())
+
+        .then(data => {
+
+            if(data.includes("success")){
+
+                button.style.background =
+                    "#ff4d4d";
+
+                button.style.color =
+                    "white";
+
+                const badge =
+                    document.getElementById("wishlist-badge");
+
+                badge.innerText =
+                    parseInt(badge.innerText) + 1;
+
+            }
+
+            else if(data.includes("exists")){
+
+                button.innerHTML = "✓";
+
+                button.style.background =
+                    "#6c757d";
+
+                button.style.color =
+                    "white";
+
+            }
+
+        });
+
+    }
+
+});
+
+
+
+// CART AJAX
+
+document.addEventListener("click", function(e){
+
+    if(e.target.closest(".add-cart-btn")){
+
+        const currentButton =
+            e.target.closest(".add-cart-btn");
+
+        const carId =
+            currentButton.dataset.id;
 
         fetch(`add-to-cart.php?id=${carId}`)
 
@@ -358,8 +446,11 @@ document.querySelectorAll(".add-cart-btn").forEach(button => {
                 const rect =
                     currentButton.getBoundingClientRect();
 
-                circle.style.left = rect.left + "px";
-                circle.style.top = rect.top + "px";
+                circle.style.left =
+                    rect.left + "px";
+
+                circle.style.top =
+                    rect.top + "px";
 
                 document.body.appendChild(circle);
 
@@ -427,7 +518,7 @@ document.querySelectorAll(".add-cart-btn").forEach(button => {
 
         });
 
-    });
+    }
 
 });
 
